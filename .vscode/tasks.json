@@ -1,0 +1,148 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "API: Install Dependencies",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/api && poetry install",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "API: Run API",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/api && poetry run uvicorn src.main:app --reload",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "API: Run Tests",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/api && poetry run pytest",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "API: Run Tests with Coverage",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/api && poetry run pytest --cov=src",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "API: Format Code",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/api && poetry run black . && poetry run isort .",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "API: Lint Code",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/api && poetry run flake8",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "API: Add Dependency",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/api && poetry add ${input:packageName}",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "API: Add Dev Dependency",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/api && poetry add --group dev ${input:packageName}",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: Up",
+            "type": "shell",
+            "command": "cd ${workspaceFolder} && docker-compose up",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: Up (Detached)",
+            "type": "shell",
+            "command": "cd ${workspaceFolder} && docker-compose up -d",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: Down",
+            "type": "shell",
+            "command": "cd ${workspaceFolder} && docker-compose down",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: Rebuild",
+            "type": "shell",
+            "command": "cd ${workspaceFolder} && docker-compose up --build",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "packageName",
+            "description": "Package name to add",
+            "default": "",
+            "type": "promptString"
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "name": "Calculator NPI",
+    "build": {
+        "dockerfile": "ContainerFile"
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/python:1": {},
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+    },
+    // remoteUser is set to root to avoid integration issues between Cursor and devcontainer
+    "remoteUser": "root",
+    "workspaceMount": "source=caculaor-npi-workspace,target=/workspace,type=volume",
+    "workspaceFolder": "/workspace"
+}
