@@ -1,0 +1,67 @@
+from fedora:42 as base
+
+from base as dev
+run dnf --assumeyes install git python3 pipx nodejs podman-compose
+run useradd --create-home --user-group --shell /bin/bash vscode
+run echo "vscode ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/vscode && \
+    chmod 0440 /etc/sudoers.d/vscode
+run touch /etc/containers/nodocker
+user vscode
+run echo 'alias compose="podman-compose"' >> ~/.bashrc
+run pipx install poetry
+
+from base as python-builder
+run dnf --assumeyes install pipx
+run useradd --create-home --home-dir /build --user-group --shell /bin/bash builder
+user builder
+run pipx install poetry
+workdir /build
+copy --chown=builder:builder . .
+env PATH="/build/.local/bin:$PATH"
+run poetry check
+run poetry install --no-interaction
+run poetry run pytest tests/unit
+run poetry build --no-interaction
+
+from base as api-runner
+run dnf --assumeyes install python3
+run useradd --create-home --user-group --shell /bin/bash app
+run mkdir /app
+run chown --recursive app:app /app
+workdir /build
+copy --from=python-builder --chown=app:app /build/dist/*.whl .
+run dnf --assumeyes install python3-pip
+run pip install *.whl
+run rm *.whl
+run dnf --assumeyes remove python3-pip
+run dnf clean all && rm -rf /var/cache/dnf/*
+run rm --recursive --force /build
+user app
+workdir /app
+copy entrypoint.py entrypoint.py
+entrypoint ["python3", "/app/entrypoint.py"]
+
+from base as nodejs-builder
+arg API_URL
+run dnf --assumeyes install nodejs
+run useradd --create-home --home-dir /build --user-group --shell /bin/bash builder
+user builder
+workdir /build
+copy --chown=builder:builder . .
+run echo "API_URL=${API_URL}" > .env
+run npm install
+run npm run build
+
+from base as ui-runner
+run dnf --assumeyes install nodejs
+run npm install -g http-server
+run useradd --create-home --user-group --shell /bin/bash app
+run mkdir /app
+run chown --recursive app:app /app
+copy --from=nodejs-builder --chown=app:app /build/dist/* /app/.
+user app
+workdir /app
+entrypoint ["http-server", "/app", "-p", "8000"]
+
+from base as prod
+run echo "I'm not ready !!!"

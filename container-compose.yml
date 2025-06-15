@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  api:
+    build: 
+      context: api
+      dockerfile: ../ContainerFile
+      target: api-runner
+    ports:
+      - "${API_PORT}:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${API_PORT}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    depends_on:
+      - db
+    env_file:
+      - .env.${ENVIRONMENT:-dev}
+    environment:
+      - ORIGINS=${API_ORIGINS}
+      - ENTRYPOINT=${API_ENTRYPOINT}
+      - HOST=${API_HOST}
+      - PORT=${API_PORT}
+      - DATABASE_URL=${DATABASE_URL}
+
+  ui:
+    build: 
+      context: ui
+      dockerfile: ../ContainerFile
+      target: ui-runner
+      args:
+        - API_URL=${API_URL}
+    ports:
+      - "${UI_PORT}:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${UI_PORT}/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    depends_on:
+      - api
+    env_file:
+      - .env.${ENVIRONMENT:-dev}
+    environment:
+      - API_URL=${API_URL}
+
+  db:
+    image: docker.io/library/postgres:17
+    env_file:
+      - .env.${ENVIRONMENT:-dev}
+    environment:
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+    ports:
+      - "5432:${DATABASE_PORT}"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data: 
