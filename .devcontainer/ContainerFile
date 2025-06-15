@@ -1,7 +1,0 @@
-from fedora:42
-
-run dnf --assumeyes install \
-    git \
-    podman-compose
-
-run echo 'alias docker-compose="podman-compose"' >> ~/.bashrc

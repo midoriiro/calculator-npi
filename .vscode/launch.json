@@ -2,38 +2,32 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: FastAPI",
+            "name": "API",
             "type": "python",
             "request": "launch",
             "module": "uvicorn",
             "args": [
-                "api.src.main:app",
+                "rpn_calculator.main:app",
                 "--reload",
                 "--port",
                 "8000"
             ],
             "jinja": true,
             "justMyCode": true,
-            "cwd": "${workspaceFolder}/.."
-        },
-        {
-            "name": "Python: Current File",
-            "type": "python",
-            "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal",
-            "justMyCode": true,
-            "cwd": "${workspaceFolder}/.."
+            "cwd": "${workspaceFolder}/api",
+            "envFile": "${workspaceFolder}/.env.dev"
         },
         {
             "name": "Python: Debug Tests",
             "type": "python",
             "request": "launch",
             "program": "${file}",
-            "purpose": ["debug-test"],
+            "purpose": [
+                "debug-test"
+            ],
             "console": "integratedTerminal",
             "justMyCode": true,
             "cwd": "${workspaceFolder}/.."
         }
     ]
-} 
+}

@@ -4,7 +4,10 @@
         {
             "label": "API: Install Dependencies",
             "type": "shell",
-            "command": "cd ${workspaceFolder}/api && poetry install",
+            "command": "poetry install",
+            "options": {
+                "cwd": "${workspaceFolder}/api",
+            },
             "group": "build",
             "presentation": {
                 "reveal": "always",
@@ -15,7 +18,13 @@
         {
             "label": "API: Run API",
             "type": "shell",
-            "command": "cd ${workspaceFolder}/api && poetry run uvicorn src.main:app --reload",
+            "command": "poetry run uvicorn rpn_calculator.main:app --reload",
+            "options": {
+                "cwd": "${workspaceFolder}/api",
+                "env": {
+                    "ENVIRONMENT": "${workspaceFolder}/.env.dev"
+                }
+            },
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -27,9 +36,12 @@
             "problemMatcher": []
         },
         {
-            "label": "API: Run Tests",
+            "label": "API: Run Unit Tests",
             "type": "shell",
-            "command": "cd ${workspaceFolder}/api && poetry run pytest",
+            "command": "poetry run pytest tests/unit",
+            "options": {
+                "cwd": "${workspaceFolder}/api",
+            },
             "group": "test",
             "presentation": {
                 "reveal": "always",
@@ -38,20 +50,63 @@
             "problemMatcher": []
         },
         {
-            "label": "API: Run Tests with Coverage",
+            "label": "API: Run Unit Tests with Coverage",
             "type": "shell",
-            "command": "cd ${workspaceFolder}/api && poetry run pytest --cov=src",
+            "command": "poetry run pytest --cov=rpn_calculator tests/unit",
+            "options": {
+                "cwd": "${workspaceFolder}/api",
+            },
             "group": "test",
             "presentation": {
                 "reveal": "always",
                 "panel": "new"
             },
             "problemMatcher": []
+        },
+        {
+            "label": "API: Run Integration Tests",
+            "type": "shell",
+            "command": "poetry run pytest tests/integration || exit 0",
+            "options": {
+                "cwd": "${workspaceFolder}/api",
+                "env": {
+                    "ENV_FILE_PATH": "${workspaceFolder}/.env.test"
+                }
+            },
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "dependsOn": [
+                "Compose: Wait for API"
+            ],
+            "dependsOrder": "sequence"
+        },
+        {
+            "label": "API: Run Integration Tests with Cleanup",
+            "type": "shell",
+            "command": "echo 'Tests terminés'",
+            "dependsOn": [
+                "Compose: Rebuild",
+                "Compose: Up (test environment)",
+                "API: Run Integration Tests",
+                "Compose: Down"
+            ],
+            "dependsOrder": "sequence",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
         },
         {
             "label": "API: Format Code",
             "type": "shell",
-            "command": "cd ${workspaceFolder}/api && poetry run black . && poetry run isort .",
+            "command": "poetry run black . && poetry run isort .",
+            "options": {
+                "cwd": "${workspaceFolder}/api",
+            },
             "group": "build",
             "presentation": {
                 "reveal": "always",
@@ -62,7 +117,10 @@
         {
             "label": "API: Lint Code",
             "type": "shell",
-            "command": "cd ${workspaceFolder}/api && poetry run flake8",
+            "command": "poetry run flake8",
+            "options": {
+                "cwd": "${workspaceFolder}/api",
+            },
             "group": "build",
             "presentation": {
                 "reveal": "always",
@@ -73,7 +131,10 @@
         {
             "label": "API: Add Dependency",
             "type": "shell",
-            "command": "cd ${workspaceFolder}/api && poetry add ${input:packageName}",
+            "command": "poetry add ${input:packageName}",
+            "options": {
+                "cwd": "${workspaceFolder}/api",
+            },
             "group": "build",
             "presentation": {
                 "reveal": "always",
@@ -84,7 +145,10 @@
         {
             "label": "API: Add Dev Dependency",
             "type": "shell",
-            "command": "cd ${workspaceFolder}/api && poetry add --group dev ${input:packageName}",
+            "command": "poetry add --group dev ${input:packageName}",
+            "options": {
+                "cwd": "${workspaceFolder}/api",
+            },
             "group": "build",
             "presentation": {
                 "reveal": "always",
@@ -93,9 +157,12 @@
             "problemMatcher": []
         },
         {
-            "label": "Docker: Up",
+            "label": "Compose: Up",
             "type": "shell",
-            "command": "cd ${workspaceFolder} && docker-compose up",
+            "command": "compose --env-file ${workspaceFolder}/.env.dev up",
+            "options": {
+                "cwd": "${workspaceFolder}",
+            },
             "group": "build",
             "presentation": {
                 "reveal": "always",
@@ -104,9 +171,12 @@
             "problemMatcher": []
         },
         {
-            "label": "Docker: Up (Detached)",
+            "label": "Compose: Up (test environment)",
             "type": "shell",
-            "command": "cd ${workspaceFolder} && docker-compose up -d",
+            "command": "compose --env-file ${workspaceFolder}/.env.test up --detach",
+            "options": {
+                "cwd": "${workspaceFolder}",
+            },
             "group": "build",
             "presentation": {
                 "reveal": "always",
@@ -115,9 +185,12 @@
             "problemMatcher": []
         },
         {
-            "label": "Docker: Down",
+            "label": "Compose: Down",
             "type": "shell",
-            "command": "cd ${workspaceFolder} && docker-compose down",
+            "command": "compose down",
+            "options": {
+                "cwd": "${workspaceFolder}",
+            },
             "group": "build",
             "presentation": {
                 "reveal": "always",
@@ -126,16 +199,42 @@
             "problemMatcher": []
         },
         {
-            "label": "Docker: Rebuild",
+            "label": "Compose: Rebuild",
             "type": "shell",
-            "command": "cd ${workspaceFolder} && docker-compose up --build",
+            "command": "compose --env-file ${workspaceFolder}/.env.dev build",
+            "options": {
+                "cwd": "${workspaceFolder}",
+            },
             "group": "build",
             "presentation": {
                 "reveal": "always",
                 "panel": "new"
             },
             "problemMatcher": []
-        }
+        },
+        {
+            "label": "Compose: Rebuild (no cache)",
+            "type": "shell",
+            "command": "compose --env-file ${workspaceFolder}/.env.dev build --no-cache",
+            "options": {
+                "cwd": "${workspaceFolder}",
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Compose: Wait for API",
+            "type": "shell",
+            "command": "curl --retry 10 --retry-all-errors -f http://host.containers.internal:8000/health || exit 1",
+            "dependsOn": [
+                "Compose: Up (test environment)"
+            ],
+            "dependsOrder": "sequence"
+        },
     ],
     "inputs": [
         {

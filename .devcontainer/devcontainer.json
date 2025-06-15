@@ -1,14 +1,19 @@
 {
-    "name": "Calculator NPI",
+    "name": "RPN Calculator",
     "build": {
-        "dockerfile": "ContainerFile"
+        "dockerfile": "../ContainerFile",
+        "context": "..",
+        "target": "dev"
     },
-    "features": {
-        "ghcr.io/devcontainers/features/python:1": {},
-        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+    "containerUser": "vscode",
+    "remoteUser": "vscode",
+    "remoteEnv": {
+        "CONTAINER_HOST": "tcp://127.0.0.1:8888"
     },
-    // remoteUser is set to root to avoid integration issues between Cursor and devcontainer
-    "remoteUser": "root",
-    "workspaceMount": "source=caculaor-npi-workspace,target=/workspace,type=volume",
-    "workspaceFolder": "/workspace"
+    "workspaceMount": "source=rpn-calculator-workspace,target=/workspace,type=volume",
+    "workspaceFolder": "/workspace",
+    "runArgs": [
+        "--network",
+        "host"
+    ]
 }
