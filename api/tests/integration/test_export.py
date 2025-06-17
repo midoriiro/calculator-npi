@@ -4,8 +4,8 @@ from io import StringIO
 
 def test_export_empty_operations(api_client):
     response = api_client("GET", "/export")
-    assert response.status_code == 404
-    assert "No operations found" == response.json()["detail"]
+    assert response.status_code == 200
+    assert "\n" == response.text
 
 def test_export_with_operations(api_client):
     operations = [
