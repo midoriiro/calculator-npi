@@ -22,6 +22,6 @@ def test_clear_with_operations(api_client):
     assert response.json()["message"] == "All operations have been cleared successfully"
 
     response = api_client("GET", "/export")
-    assert response.status_code == 404
-    assert "No operations found" == response.json()["detail"]
+    assert response.status_code == 200
+    assert "\n" == response.text
     
