@@ -12,7 +12,7 @@ class CalculationRequest(BaseModel):
     expression: str = Field(
         ..., 
         description="The RPN expression to evaluate", 
-        example="2 3 +"
+        examples=["2 3 +", "4 5 *", "10 2 /"]
     )
 
 
@@ -26,12 +26,12 @@ class CalculationResponse(BaseModel):
     result: float = Field(
         ...,
         description="The calculated result of the RPN expression",
-        example=5.0
+        examples=[5.0]
     )
     expression: str = Field(
         ...,
         description="The original RPN expression that was evaluated",
-        example="2 3 +",
+        examples=["2 3 +", "4 5 *", "10 2 /"],
     )
     timestamp: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc),
@@ -63,7 +63,7 @@ class ClearResponse(BaseModel):
     message: str = Field(
         ...,
         description="Success message confirming the operation(s) was cleared",
-        example="All operations have been cleared successfully"
+        examples=["All operations have been cleared successfully"]
     )
 
 
