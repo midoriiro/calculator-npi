@@ -76,7 +76,7 @@ async def calculate(
         db.add(operation)
         db.commit()
         return CalculationResponse(
-            result=result, expression=request.expression, timestamp=operation.timestamp
+            result=result, expression=request.expression, timestamp=operation.timestamp.isoformat()
         )
     except CalculatorError as e:
         return JSONResponse(
