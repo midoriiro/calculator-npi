@@ -306,3 +306,43 @@ Bonnes pratiques :
     Pour la production, utiliser un mécanisme sécurisé de gestion des variables (ex: variables d’environnement dans le pipeline CI/CD).
 
 Cette organisation garantit un comportement cohérent et "sécurisé" entre les différents environnements, tout en simplifiant l'expérience de développement.
+
+## 10️⃣ TODO List
+
+### 🛠️ Fonctionnalités manquantes / améliorations possibles
+
+- **Validation des expressions côté UI** :
+  - Implémenter une validation formelle plus stricte côté UI.
+  - Améliorer les messages d’erreur retournés par l’API pour plus de clarté UX.
+- **Accessibilité (A11Y)** :
+  - Support de la navigation clavier.
+  - Amélioration générale de l’accessibilité (notamment sur le clavier de saisie).
+- **Extension fonctionnelle de la calculatrice** :
+  - Ajouter des opérateurs avancés (puissance, modulo, racine...).
+  - Ajouter la possibilité d'importer un fichier CSV.
+  - Ajouter des notifications UX (snackbar) pour les tâches asynchrones (copie, téléchargement...).
+
+### 🚧 Limitations connues
+
+- **Parser NPI** :
+  - Les nombres négatifs ne sont pas testés unitairement ; un traitement explicite serait à prévoir.
+  - Les opérations sur les flottants ont été testées manuellement mais non couvertes par des tests unitaires.
+- **Tests** :
+  - Les endpoints de l’API ne sont pas tous couverts par des tests d’intégration.
+  - La base de données et les workflows end-to-end ne sont pas encore testés de manière automatisée.
+- **Pagination de l’historique** :
+  - Aucune pagination n’est implémentée ; cela serait nécessaire pour un usage en production.
+- **Validation des modèles d’API** :
+  - Les modèles d’entrée/sortie ne sont pas validés avec Pydantic, ce qui limite l’enrichissement de la documentation OpenAPI.
+- **Limitations liées à Podman** :
+  - Nécessité d’utiliser une adresse TCP pour Podman rootless ; pas d’autre contrainte notable.
+
+### 🚀 Points à approfondir si plus de temps était disponible
+
+- Approfondir l’organisation du projet backend :
+  - Mieux structurer le projet (packaging Python, structure FastAPI plus avancée).
+  - Améliorer la gestion des dépendances et la cohérence du projet Poetry/Python/FastAPI.
+- Implémenter une pipeline CI/CD basique (tests + build).
+- Revoir la gestion des variables d’environnement et des secrets :
+  - Utiliser des mécanismes plus robustes et sécurisés (Vault, GitHub Secrets...).
+- Améliorer la validation des données au niveau de l'API (modèles Pydantic + tests).
